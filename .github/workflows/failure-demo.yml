@@ -1,0 +1,15 @@
+
+name: PipelineVerse Failure Demo
+
+on:
+  workflow_dispatch:
+
+jobs:
+  failure-demo:
+    name: Intentional Python Failure
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger intentional Python error
+        run: |
+          python -c "import pipelineverse_missing_demo_module"
