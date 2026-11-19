@@ -1,0 +1,10 @@
+services:
+  pipelineverse:
+    build: .
+    image: pipelineverse:latest
+    container_name: pipelineverse
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env
+    restart: unless-stopped

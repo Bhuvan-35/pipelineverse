@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>PipelineVerse | CI/CD City</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+<header><div><small>DEVOPS OBSERVABILITY</small><h1>Pipeline<span>Verse</span></h1></div>
+<div class="repo">● <span id="repoName">{{ repo }}</span></div></header>
+<main>
+<section class="intro"><div><small>YOUR WORKFLOW, REIMAGINED</small>
+<h2>See your pipeline<br><em>come to life.</em></h2>
+<p>Explore GitHub Actions as an interactive 3D city. Select a building to inspect its job and understand failures.</p></div>
+<div class="actions"><button id="refreshBtn">↻ Refresh pipeline</button><a id="workflowLink" href="#" target="_blank">Open on GitHub ↗</a></div></section>
+<section class="stats">
+<article><span>Total workflow runs</span><b id="totalRuns">—</b></article>
+<article><span>Successful jobs</span><b class="green" id="successCount">—</b></article>
+<article><span>Failed jobs</span><b class="red" id="failedCount">—</b></article>
+<article><span>Running jobs</span><b class="yellow" id="runningCount">—</b></article>
+</section>
+<section class="layout">
+<div class="panel"><div class="heading"><div><small>LIVE JOB MAP</small><h3>Pipeline City</h3></div>
+<div class="legend"><span>🟢 Success</span><span>🔴 Failed</span><span>🟡 Running</span><span>⚪ Queued</span></div></div>
+<div id="city"></div><p class="hint">Drag to rotate · Scroll to zoom · Click a building to inspect</p></div>
+<aside class="panel inspector"><small>INSPECTOR</small><h3 id="jobTitle">Select a building</h3>
+<p id="jobDescription" class="muted">Choose a job in the 3D city to view its details.</p>
+<div id="jobMeta"></div><hr><h4>Failure intelligence</h4>
+<div id="analysis" class="analysis">Failure explanations and suggested fixes appear here when a failed job is selected.</div>
+<button id="analyzeBtn" disabled>Analyze selected job logs</button>
+<a id="jobLink" class="joblink hidden" href="#" target="_blank">View job on GitHub ↗</a></aside>
+</section>
+<section class="lower"><div class="panel"><small>WORKFLOW HISTORY</small><h3>Recent runs</h3><div id="runsList">Loading workflows…</div></div>
+<div class="panel"><small>HOW TO USE</small><h3>From commit to clarity</h3>
+<ol><li>Choose a workflow run.</li><li>Buildings represent individual jobs.</li><li>Colors show the job status.</li><li>Select a failed building to analyze its logs.</li></ol></div></section>
+</main><footer>PipelineVerse · 3D CI/CD visualization and explainable failure analysis</footer>
+<div id="toast"></div>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body></html>
