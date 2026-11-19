@@ -1,0 +1,17 @@
+
+name: PipelineVerse Failure Test
+
+on:
+  push:
+    paths:
+      - '.github/workflows/failure-test.yml'
+  workflow_dispatch:
+
+jobs:
+  intentional-failure:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Simulate a failure
+        run: |
+          echo "Testing PipelineVerse failure detection"
+          exit 1
