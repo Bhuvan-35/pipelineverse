@@ -1,54 +1,61 @@
+
 name: PipelineVerse CI-CD
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   pull_request:
-    branches: [main]
+    branches:
+      - main
 
 permissions:
   contents: read
+  packages: write
 
 jobs:
+
+  # Job 1: Test the application and build Docker image
   test-and-build:
+    name: Test and Build
     runs-on: ubuntu-latest
-    defaults:
-      run:
-          working-directory: ./PipelineVerse
+
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.12"
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install pytest
+          python -m pip install -r requirements.txt
+          python -m pip install pytest
 
       - name: Run unit tests
-        run: pytest -q
+        run: python -m pytest -q
 
       - name: Compile Python files
         run: python -m compileall -q .
 
       - name: Build Docker image
-        run: docker build -t pipelineverse:${{ github.sha }} .
+        run: docker build -t pipelineverse:ci .
 
+  # Job 2: Publish Docker image to GitHub Container Registry
   deploy-image:
-    needs: test-and-build
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    name: Deploy Docker Image
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
+
+    needs: test-and-build
+
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
@@ -57,9 +64,11 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and publish Docker image
+      - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
           context: .
           push: true
-          tags: ghcr.io/${{ github.repository }}:latest
+          tags: |
+            ghcr.io/bhuvan-35/pipelineverse:latest
+            ghcr.io/bhuvan-35/pipelineverse:${{ github.sha }}
